@@ -22,7 +22,7 @@ func Gobot(Token string) {
 	discord.AddHandler(messageCreate)
 
 	// In this example, we only care about receiving message events.
-	discord.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsGuildMessages)
+	discord.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsAllWithoutPrivileged)
 
 	// Open a websocket connection to Discord and begin listening.
 	err = discord.Open()
@@ -31,11 +31,9 @@ func Gobot(Token string) {
 		return
 	}
 
-	// Wait here until CTRL-C or other term signal is received.
-	fmt.Println("Bot is now running. \nPress CTRL-C to exit.")
-	sc := make(chan os.Signal, 1)
-	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
-	<-sc
+	discord.UpdateStatus(1, "Go-Kart")
+
+	waitForProgramToClose()
 
 	// Cleanly close down the Discord session.
 	discord.Close()
@@ -56,4 +54,16 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Content == ",pong" {
 		s.ChannelMessageSend(m.ChannelID, "Ping!")
 	}
+
+	if m.Content == ",hi" {
+		s.ChannelMessageSend(m.ChannelID, "Hey <@"+m.Author.ID+">!")
+	}
+}
+
+// Wait here until CTRL-C or other term signal is received.
+func waitForProgramToClose() {
+	fmt.Println("Bot is now running. \nPress CTRL-C to exit.")
+	sc := make(chan os.Signal, 1)
+	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
+	<-sc
 }
