@@ -1,7 +1,21 @@
 package main
 
-import "fmt"
+import (
+	"flag"
+	"gobot"
+)
+
+// Variables used for command line parameters
+var (
+	Token string
+)
+
+func init() {
+
+	flag.StringVar(&Token, "t", "", "Bot Token")
+	flag.Parse()
+}
 
 func main() {
-	fmt.Println("Hello, World!")
+	gobot.Gobot(Token)
 }
