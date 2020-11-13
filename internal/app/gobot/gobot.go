@@ -59,6 +59,10 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Content == ",hi" {
 		s.ChannelMessageSend(m.ChannelID, "Hey <@"+m.Author.ID+">!")
 	}
+
+	if m.Content == ",help" {
+		s.ChannelMessageSend(m.ChannelID, "https://www.youtube.com/watch?v=2Q_ZzBGPdqE")
+	}
 }
 
 // Wait here until CTRL-C or other term signal is received.
